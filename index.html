@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BB4B Stationery – Your Study Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --ink:#1a1208; --paper:#f5efe0; --cream:#faf6ed; --aged:#e8dcc8;
+    --accent:#c0392b; --gold:#b8860b; --green:#2d5a27;
+    --blue-ink:#1a3a5c; --ruled:#b8c4d1;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Lora',serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+
+  nav{background:var(--blue-ink);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 3px 12px rgba(0,0,0,.3);border-bottom:4px solid var(--gold);}
+  .logo{font-family:'Special Elite',cursive;font-size:1.7rem;color:var(--paper);padding:1rem 0;letter-spacing:.05em;}
+  .logo span{color:var(--gold);}
+  .nav-links{display:flex;gap:.3rem;list-style:none;}
+  .nav-links a{font-family:'Lora',serif;color:var(--aged);text-decoration:none;padding:.5rem 1rem;border-radius:4px;font-size:.9rem;transition:all .2s;}
+  .nav-links a:hover,.nav-links a.active{background:rgba(184,134,11,.2);color:var(--gold);}
+  .cart-btn{background:var(--gold);color:var(--ink);border:none;padding:.5rem 1rem;border-radius:3px;font-family:'Special Elite',cursive;font-size:.85rem;cursor:pointer;transition:all .2s;position:relative;}
+  .cart-btn:hover{background:var(--accent);color:white;}
+  .cart-count{position:absolute;top:-6px;right:-6px;background:var(--accent);color:white;border-radius:50%;width:18px;height:18px;font-size:.65rem;display:none;align-items:center;justify-content:center;}
+
+  .page{display:none;animation:fadeIn .4s ease;}
+  .page.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .hero{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--blue-ink) 0%,#0d2238 60%,#1a3a1a 100%);padding:4rem 2rem;}
+  .hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px),linear-gradient(90deg,transparent 79px,rgba(255,180,160,.08) 79px,rgba(255,180,160,.08) 81px,transparent 81px);background-size:100% 40px,100% 100%;}
+  .hero-deco{position:absolute;font-size:18rem;opacity:.04;font-family:'Special Elite',cursive;top:-2rem;left:-2rem;color:white;line-height:1;user-select:none;}
+  .hero-content{position:relative;z-index:1;max-width:700px;}
+  .hero-badge{display:inline-block;background:var(--gold);color:var(--ink);font-family:'Special Elite',cursive;font-size:.75rem;letter-spacing:.2em;padding:.4rem 1.2rem;border-radius:2px;margin-bottom:1.5rem;text-transform:uppercase;}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5rem);font-weight:900;color:var(--paper);line-height:1.1;margin-bottom:1rem;text-shadow:3px 3px 12px rgba(0,0,0,.5);}
+  .hero h1 em{font-style:italic;color:var(--gold);}
+  .hero p{color:var(--aged);font-size:1.15rem;line-height:1.8;margin-bottom:2.5rem;font-style:italic;}
+  .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:1.5rem;animation:bounce 2s infinite;}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+
+  .btn{padding:.85rem 2rem;border:none;border-radius:3px;font-family:'Lora',serif;font-size:.95rem;cursor:pointer;transition:all .25s;letter-spacing:.05em;text-decoration:none;display:inline-block;}
+  .btn-primary{background:var(--accent);color:white;box-shadow:4px 4px 0 rgba(0,0,0,.3);}
+  .btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(0,0,0,.3);}
+  .btn-secondary{background:transparent;color:var(--paper);border:2px solid var(--gold);}
+  .btn-secondary:hover{background:var(--gold);color:var(--ink);}
+
+  .features-strip{background:var(--green);padding:1rem 2rem;display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;border-bottom:3px solid var(--gold);}
+  .feature-item{display:flex;align-items:center;gap:.6rem;color:var(--aged);font-size:.88rem;font-family:'Special Elite',cursive;letter-spacing:.05em;}
+
+  .section-title{text-align:center;padding:3.5rem 2rem 1rem;}
+  .section-title .label{font-family:'Special Elite',cursive;font-size:.75rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:.5rem;}
+  .section-title h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--blue-ink);position:relative;display:inline-block;}
+  .section-title h2::after{content:'';display:block;width:60px;height:3px;background:var(--gold);margin:.6rem auto 0;}
+
+  .products-section{padding:1rem 2rem 4rem;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;max-width:1100px;margin:2rem auto 0;}
+  .product-card{background:white;border-radius:4px;overflow:hidden;box-shadow:3px 3px 0 var(--aged),6px 6px 0 rgba(0,0,0,.08);transition:all .25s;border:1px solid var(--aged);position:relative;}
+  .product-card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--aged),10px 10px 0 rgba(0,0,0,.1);}
+  .product-img{width:100%;height:180px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:4rem;border-bottom:2px solid var(--aged);}
+  .product-info{padding:1rem 1.1rem 1.2rem;}
+  .product-info h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:.3rem;color:var(--ink);}
+  .product-info .desc{font-size:.82rem;color:#666;line-height:1.5;margin-bottom:.8rem;font-style:italic;}
+  .product-footer{display:flex;align-items:center;justify-content:space-between;}
+  .price{font-family:'Special Elite',cursive;font-size:1.1rem;color:var(--accent);}
+  .tag{position:absolute;top:10px;right:10px;background:var(--gold);color:var(--ink);font-size:.68rem;font-family:'Special Elite',cursive;padding:2px 8px;border-radius:2px;letter-spacing:.08em;}
+  .add-to-cart{background:var(--blue-ink);color:white;border:none;padding:.4rem .9rem;border-radius:3px;font-size:.8rem;cursor:pointer;font-family:'Lora',serif;transition:all .2s;}
+  .add-to-cart:hover{background:var(--accent);}
+
+  .categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem;max-width:1000px;margin:2rem auto;padding:0 2rem 4rem;}
+  .category-card{background:white;border:2px solid var(--aged);border-radius:4px;padding:2rem 1rem;text-align:center;cursor:pointer;transition:all .25s;box-shadow:3px 3px 0 var(--aged);}
+  .category-card:hover{border-color:var(--blue-ink);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--blue-ink);}
+  .category-card .cat-icon{font-size:2.8rem;margin-bottom:.7rem;}
+  .category-card h3{font-family:'Playfair Display',serif;color:var(--blue-ink);font-size:1rem;margin-bottom:.3rem;}
+  .category-card p{font-size:.78rem;color:#888;font-style:italic;}
+
+  .admin-section{background:white;border:2px dashed var(--gold);border-radius:6px;max-width:700px;margin:0 auto 3rem;padding:2rem 2.5rem;position:relative;}
+  .admin-section::before{content:'✎ ADD NEW ITEM';position:absolute;top:-.8rem;left:1.5rem;background:white;padding:0 .5rem;font-family:'Special Elite',cursive;font-size:.8rem;color:var(--gold);letter-spacing:.15em;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .form-group{display:flex;flex-direction:column;gap:.35rem;}
+  .form-group.full{grid-column:1/-1;}
+  .form-group label{font-family:'Special Elite',cursive;font-size:.78rem;letter-spacing:.1em;color:var(--blue-ink);text-transform:uppercase;}
+  .form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--aged);border-radius:3px;padding:.6rem .8rem;font-family:'Lora',serif;font-size:.9rem;background:var(--cream);color:var(--ink);transition:border-color .2s;}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--blue-ink);background:white;}
+  .form-group textarea{resize:vertical;min-height:80px;}
+  .emoji-picker{display:grid;grid-template-columns:repeat(8,1fr);gap:.4rem;margin-top:.4rem;}
+  .emoji-btn{font-size:1.4rem;background:var(--cream);border:1.5px solid var(--aged);border-radius:3px;padding:.3rem;cursor:pointer;transition:all .15s;text-align:center;}
+  .emoji-btn:hover,.emoji-btn.selected{background:var(--gold);border-color:var(--gold);}
+  .btn-add{background:var(--green);color:white;border:none;padding:.85rem 2rem;border-radius:3px;font-family:'Special Elite',cursive;font-size:.9rem;letter-spacing:.1em;cursor:pointer;margin-top:1.2rem;width:100%;transition:all .2s;}
+  .btn-add:hover{background:var(--blue-ink);}
+  .success-msg{background:#e8f5e9;border:1.5px solid #81c784;border-radius:4px;padding:1rem;font-family:'Special Elite',cursive;color:var(--green);text-align:center;margin-top:1rem;display:none;}
+
+  .about-wrapper{max-width:900px;margin:0 auto;padding:2rem 2rem 4rem;}
+  .about-card{background:white;border-radius:4px;box-shadow:4px 4px 0 var(--aged);border:1px solid var(--aged);padding:2.5rem 3rem;margin-bottom:2rem;position:relative;}
+  .about-card::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--blue-ink);border-radius:4px 0 0 4px;}
+  .about-card h3{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--blue-ink);margin-bottom:1rem;}
+  .about-card p{line-height:1.9;color:#444;font-size:.97rem;}
+  .values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-top:1.5rem;}
+  .value-item{text-align:center;padding:1.5rem 1rem;background:var(--cream);border-radius:4px;border:1px solid var(--aged);}
+  .value-item .icon{font-size:2rem;margin-bottom:.5rem;}
+  .value-item h4{font-family:'Playfair Display',serif;color:var(--blue-ink);margin-bottom:.3rem;}
+  .value-item p{font-size:.82rem;color:#666;font-style:italic;line-height:1.5;}
+
+  .contact-wrapper{max-width:900px;margin:0 auto;padding:2rem 2rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .contact-info-card{background:var(--blue-ink);color:var(--paper);border-radius:4px;padding:2.5rem;box-shadow:4px 4px 0 var(--gold);}
+  .contact-info-card h3{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold);margin-bottom:.5rem;}
+  .contact-info-card p{color:var(--aged);font-style:italic;margin-bottom:2rem;font-size:.9rem;line-height:1.7;}
+  .contact-detail{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;}
+  .contact-detail .c-icon{font-size:1.5rem;background:rgba(184,134,11,.2);padding:.6rem;border-radius:4px;flex-shrink:0;width:3rem;height:3rem;display:flex;align-items:center;justify-content:center;}
+  .contact-detail .c-text label{font-family:'Special Elite',cursive;font-size:.7rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:.2rem;}
+  .contact-detail .c-text span{font-size:.97rem;color:var(--paper);}
+  .contact-form-card{background:white;border-radius:4px;padding:2.5rem;box-shadow:4px 4px 0 var(--aged);border:1px solid var(--aged);}
+  .contact-form-card h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--blue-ink);margin-bottom:1.5rem;}
+  .btn-send{background:var(--accent);color:white;border:none;padding:.85rem 2rem;border-radius:3px;font-family:'Special Elite',cursive;font-size:.9rem;letter-spacing:.1em;cursor:pointer;width:100%;margin-top:.5rem;transition:all .2s;}
+  .btn-send:hover{background:var(--blue-ink);}
+
+  /* CART */
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;}
+  .cart-panel{position:absolute;top:0;right:0;width:min(420px,100vw);height:100%;background:white;box-shadow:-4px 0 20px rgba(0,0,0,.2);padding:2rem;overflow-y:auto;}
+  .cart-panel h2{font-family:'Playfair Display',serif;color:var(--blue-ink);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--aged);}
+  .cart-item{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--aged);}
+  .cart-item-name{font-size:.9rem;font-weight:600;margin-bottom:.3rem;}
+  .cart-item-price{color:var(--accent);font-family:'Special Elite',cursive;white-space:nowrap;}
+  .cart-total{margin-top:1.5rem;padding-top:1rem;border-top:2px solid var(--blue-ink);font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--blue-ink);display:flex;justify-content:space-between;}
+  .close-cart{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--ink);}
+  .empty-cart{text-align:center;padding:3rem 1rem;color:#999;font-style:italic;}
+  .checkout-btn{background:var(--accent);color:white;border:none;padding:.9rem 2rem;border-radius:3px;font-family:'Special Elite',cursive;font-size:.95rem;letter-spacing:.1em;cursor:pointer;width:100%;margin-top:1rem;transition:all .2s;}
+  .checkout-btn:hover{background:var(--blue-ink);}
+  .qty-btn{background:var(--aged);border:none;width:24px;height:24px;border-radius:3px;cursor:pointer;font-size:.9rem;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;}
+  .qty-btn:hover{background:var(--blue-ink);color:white;}
+
+  /* PAYMENT MODAL */
+  .payment-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem;}
+  .payment-modal{background:white;border-radius:8px;width:min(520px,100%);max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:popIn .35s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+  .payment-header{background:var(--blue-ink);color:white;padding:1.5rem 2rem;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:center;}
+  .payment-header h2{font-family:'Playfair Display',serif;font-size:1.3rem;}
+  .payment-header .hdr-amt{font-family:'Special Elite',cursive;color:var(--gold);font-size:1rem;}
+  .close-modal{background:none;border:none;color:white;font-size:1.4rem;cursor:pointer;line-height:1;}
+  .payment-body{padding:1.5rem 2rem 2rem;}
+
+  .pay-steps{display:flex;margin-bottom:1.8rem;position:relative;}
+  .pay-step{flex:1;text-align:center;}
+  .pay-step .snum{width:30px;height:30px;border-radius:50%;background:var(--aged);color:#aaa;font-family:'Special Elite',cursive;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin:0 auto .35rem;transition:all .3s;}
+  .pay-step.active .snum{background:var(--blue-ink);color:white;}
+  .pay-step.done .snum{background:var(--green);color:white;}
+  .pay-step slabel{font-family:'Special Elite',cursive;font-size:.62rem;letter-spacing:.08em;color:#aaa;text-transform:uppercase;display:block;}
+  .pay-step.active slabel,.pay-step.done slabel{color:var(--blue-ink);}
+  .step-line{flex:1;height:2px;background:var(--aged);margin-top:15px;transition:background .3s;}
+  .step-line.done{background:var(--green);}
+
+  .step-panel{display:none;}
+  .step-panel.active{display:block;}
+
+  .order-summary{background:var(--cream);border-radius:6px;padding:1.2rem;margin-bottom:1.3rem;border:1px solid var(--aged);}
+  .order-summary h4{font-family:'Special Elite',cursive;letter-spacing:.1em;font-size:.78rem;color:var(--blue-ink);text-transform:uppercase;margin-bottom:.8rem;}
+  .order-row{display:flex;justify-content:space-between;font-size:.87rem;padding:.3rem 0;border-bottom:1px dashed var(--aged);}
+  .order-row.total{border:none;font-weight:600;font-size:1rem;color:var(--accent);margin-top:.3rem;padding-top:.5rem;}
+
+  .pf-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem;}
+  .pf-group label{font-family:'Special Elite',cursive;font-size:.72rem;letter-spacing:.1em;color:var(--blue-ink);text-transform:uppercase;}
+  .pf-group input,.pf-group textarea{border:1.5px solid var(--aged);border-radius:4px;padding:.65rem .9rem;font-family:'Lora',serif;font-size:.9rem;background:var(--cream);color:var(--ink);}
+  .pf-group input:focus,.pf-group textarea:focus{outline:none;border-color:var(--blue-ink);background:white;}
+  .pf-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+
+  .qr-container{text-align:center;}
+  .qr-box{display:inline-block;background:white;border:3px solid var(--blue-ink);border-radius:8px;padding:1.1rem;margin:.8rem auto;box-shadow:0 4px 20px rgba(0,0,0,.1);}
+  .upi-id-pill{background:var(--cream);border:1.5px dashed var(--gold);border-radius:6px;padding:.7rem 1.5rem;margin:.6rem auto;font-family:'Special Elite',cursive;font-size:1rem;color:var(--blue-ink);letter-spacing:.05em;display:inline-block;}
+  .amount-pill{background:var(--accent);color:white;font-family:'Special Elite',cursive;font-size:1.35rem;padding:.45rem 2rem;border-radius:30px;display:inline-block;margin:.3rem 0;letter-spacing:.05em;}
+  .upi-apps{display:flex;gap:.7rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap;}
+  .upi-app-btn{display:flex;flex-direction:column;align-items:center;gap:.25rem;background:white;border:2px solid var(--aged);border-radius:8px;padding:.6rem .9rem;cursor:pointer;transition:all .2s;font-size:.72rem;font-family:'Special Elite',cursive;color:var(--blue-ink);letter-spacing:.04em;text-decoration:none;}
+  .upi-app-btn:hover{border-color:var(--blue-ink);background:var(--cream);transform:translateY(-2px);}
+  .upi-app-btn .app-icon{font-size:1.6rem;}
+  .pay-instructions{background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:.9rem 1.1rem;margin:.8rem 0;text-align:left;}
+  .pay-instructions h5{font-family:'Special Elite',cursive;color:var(--gold);letter-spacing:.1em;font-size:.78rem;text-transform:uppercase;margin-bottom:.5rem;}
+  .pay-instructions ol{padding-left:1.2rem;font-size:.83rem;line-height:2;color:#555;}
+
+  .confirm-section{text-align:center;padding:.5rem 0;}
+  .confirm-icon{font-size:3.5rem;margin-bottom:.4rem;}
+  .confirm-section h3{font-family:'Playfair Display',serif;color:var(--blue-ink);font-size:1.4rem;margin-bottom:.4rem;}
+  .confirm-section p{color:#666;font-size:.88rem;line-height:1.7;margin-bottom:.4rem;font-style:italic;}
+  .txn-input{width:100%;border:2px solid var(--aged);border-radius:4px;padding:.8rem;font-family:'Lora',serif;font-size:.95rem;margin:.7rem 0;text-align:center;letter-spacing:.1em;}
+  .txn-input:focus{outline:none;border-color:var(--blue-ink);}
+
+  .pay-nav{display:flex;gap:.8rem;margin-top:1.3rem;}
+  .pay-btn{flex:1;padding:.8rem;border:none;border-radius:4px;font-family:'Special Elite',cursive;font-size:.88rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+  .pay-btn-back{background:var(--aged);color:var(--ink);}
+  .pay-btn-back:hover{background:#ccc;}
+  .pay-btn-next{background:var(--blue-ink);color:white;}
+  .pay-btn-next:hover{background:var(--accent);}
+  .pay-btn-confirm{background:var(--green);color:white;}
+  .pay-btn-confirm:hover{background:#1a3a10;}
+
+  /* ORDER SUCCESS */
+  .order-success{text-align:center;padding:4rem 2rem;}
+  .order-success .big-icon{font-size:5rem;margin-bottom:1rem;animation:pop .5s;}
+  @keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .order-success h2{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--green);margin-bottom:.5rem;}
+  .order-success p{color:#666;font-size:1rem;line-height:1.8;max-width:500px;margin:0 auto 2rem;}
+  .order-card{background:white;border:1px solid var(--aged);border-radius:6px;max-width:420px;margin:0 auto 2rem;padding:1.5rem;box-shadow:3px 3px 0 var(--aged);}
+  .order-card h4{font-family:'Special Elite',cursive;color:var(--blue-ink);letter-spacing:.1em;font-size:.8rem;text-transform:uppercase;margin-bottom:.8rem;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:white;padding:.85rem 2rem;border-radius:4px;font-family:'Special Elite',cursive;font-size:.9rem;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:var(--aged);padding:3rem 2rem 1.5rem;border-top:4px solid var(--gold);}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;max-width:1100px;margin:0 auto 2rem;}
+  .footer-logo{font-family:'Special Elite',cursive;font-size:1.5rem;color:var(--paper);margin-bottom:.8rem;}
+  .footer-logo span{color:var(--gold);}
+  .footer-desc{font-size:.85rem;line-height:1.7;font-style:italic;}
+  .footer-col h4{font-family:'Special Elite',cursive;color:var(--gold);letter-spacing:.1em;font-size:.85rem;text-transform:uppercase;margin-bottom:1rem;}
+  .footer-col ul{list-style:none;}
+  .footer-col ul li{margin-bottom:.5rem;}
+  .footer-col ul li a{color:var(--aged);text-decoration:none;font-size:.88rem;transition:color .2s;}
+  .footer-col ul li a:hover{color:var(--gold);}
+  .footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,.1);padding-top:1.5rem;font-size:.8rem;color:#888;max-width:1100px;margin:0 auto;}
+
+  @media(max-width:700px){
+    .footer-grid,.contact-wrapper{grid-template-columns:1fr;gap:1.5rem;}
+    .form-grid,.pf-row{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .hero h1{font-size:2.2rem;}
+    .about-card{padding:1.5rem;}
+    .admin-section{padding:1.5rem;}
+    .payment-body{padding:1rem 1.2rem 1.5rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()">
+  <div class="cart-panel" onclick="event.stopPropagation()">
+    <button class="close-cart" onclick="closeCart()">✕</button>
+    <h2>🛒 Your Bag</h2>
+    <div id="cartItems"><div class="empty-cart">Your bag is empty.<br>Add some stationery!</div></div>
+    <div class="cart-total" id="cartTotal" style="display:none">
+      <span>Total</span><span id="totalAmount">₹0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openPayment()" style="display:none">🔒 Pay with UPI →</button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="payment-overlay" id="paymentOverlay">
+  <div class="payment-modal">
+    <div class="payment-header">
+      <h2>🔐 Secure UPI Checkout</h2>
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <span class="hdr-amt" id="payHeaderAmount">₹0</span>
+        <button class="close-modal" onclick="closePayment()">✕</button>
+      </div>
+    </div>
+    <div class="payment-body">
+
+      <!-- STEP INDICATOR -->
+      <div class="pay-steps">
+        <div class="pay-step active" id="sind1"><div class="snum">1</div><slabel>Details</slabel></div>
+        <div class="step-line" id="sline1"></div>
+        <div class="pay-step" id="sind2"><div class="snum">2</div><slabel>Pay UPI</slabel></div>
+        <div class="step-line" id="sline2"></div>
+        <div class="pay-step" id="sind3"><div class="snum">3</div><slabel>Confirm</slabel></div>
+      </div>
+
+      <!-- STEP 1: DETAILS -->
+      <div class="step-panel active" id="step1">
+        <div class="order-summary">
+          <h4>📦 Order Summary</h4>
+          <div id="summaryItems"></div>
+          <div class="order-row total"><span>Total Payable</span><span id="summaryTotal">₹0</span></div>
+        </div>
+        <div class="pf-row">
+          <div class="pf-group"><label>Full Name *</label><input type="text" id="payName" placeholder="Your name"></div>
+          <div class="pf-group"><label>Phone *</label><input type="tel" id="payPhone" placeholder="10-digit number"></div>
+        </div>
+        <div class="pf-group"><label>Email</label><input type="email" id="payEmail" placeholder="your@email.com"></div>
+        <div class="pf-group"><label>Delivery Address *</label><textarea id="payAddress" rows="2" placeholder="House no., Street, City, Pincode"></textarea></div>
+        <div class="pay-nav">
+          <button class="pay-btn pay-btn-back" onclick="closePayment()">✕ Cancel</button>
+          <button class="pay-btn pay-btn-next" onclick="goStep2()">Next: Pay via UPI →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: UPI QR -->
+      <div class="step-panel" id="step2">
+        <div class="qr-container">
+          <p style="font-family:'Special Elite',cursive;font-size:.75rem;letter-spacing:.15em;color:#999;text-transform:uppercase;margin-bottom:.3rem">Pay Exactly</p>
+          <div class="amount-pill" id="qrAmount">₹0</div>
+          <p style="font-size:.8rem;color:#888;margin:.3rem 0;font-style:italic">Scan with any UPI app or tap a button below</p>
+          <div class="qr-box"><div id="qrcode"></div></div>
+          <div><div class="upi-id-pill">7982669313@ptaxis</div></div>
+          <p style="font-size:.76rem;color:#bbb;font-style:italic;margin:.2rem 0">Paytm Axis · Accepts all UPI apps</p>
+          <div class="upi-apps">
+            <a class="upi-app-btn" id="phonepeLink" href="#" target="_blank"><span class="app-icon">💜</span>PhonePe</a>
+            <a class="upi-app-btn" id="gpayLink" href="#" target="_blank"><span class="app-icon">🔵</span>GPay</a>
+            <a class="upi-app-btn" id="paytmLink" href="#" target="_blank"><span class="app-icon">🟦</span>Paytm</a>
+            <a class="upi-app-btn" id="bhimLink" href="#" target="_blank"><span class="app-icon">🇮🇳</span>BHIM</a>
+          </div>
+          <div class="pay-instructions">
+            <h5>📋 How to Pay</h5>
+            <ol>
+              <li>Open your UPI app — Paytm, GPay, PhonePe, or BHIM</li>
+              <li>Tap "Scan QR" and scan the code above, <em>or</em> tap an app button</li>
+              <li>Confirm payment of <strong id="instrAmount">₹0</strong> to <strong>7982669313@ptaxis</strong></li>
+              <li>Note the <strong>Transaction ID / UTR</strong> shown in your app</li>
+              <li>Click <em>"Done Paying"</em> and enter it on the next screen</li>
+            </ol>
+          </div>
+        </div>
+        <div class="pay-nav">
+          <button class="pay-btn pay-btn-back" onclick="goStepDirect(1)">← Back</button>
+          <button class="pay-btn pay-btn-next" onclick="goStepDirect(3)">Done Paying →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: CONFIRM -->
+      <div class="step-panel" id="step3">
+        <div class="confirm-section">
+          <div class="confirm-icon">📲</div>
+          <h3>Almost Done!</h3>
+          <p>Enter your <strong>Transaction ID / UTR Number</strong> from your UPI app to confirm your order.</p>
+          <input class="txn-input" type="text" id="txnId" placeholder="e.g.  T25061234567  or  012345678901">
+          <div class="pf-group" style="text-align:left;margin-top:.5rem">
+            <label>Payment Screenshot (optional)</label>
+            <input type="file" id="payScreenshot" accept="image/*" style="border:none;background:none;padding:.3rem 0;font-size:.83rem;font-family:Lora,serif">
+          </div>
+          <p style="font-size:.76rem;color:#bbb;margin-top:.5rem">Your order is confirmed once we verify the UTR number. We'll WhatsApp you within 2–4 hrs.</p>
+        </div>
+        <div class="pay-nav">
+          <button class="pay-btn pay-btn-back" onclick="goStepDirect(2)">← Back</button>
+          <button class="pay-btn pay-btn-confirm" onclick="confirmOrder()">✓ Place My Order</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">BB4<span>B</span> Stationery</div>
+  <ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home',this)">Home</a></li>
+    <li><a href="#" onclick="showPage('shop',this)">Shop</a></li>
+    <li><a href="#" onclick="showPage('categories',this)">Categories</a></li>
+    <li><a href="#" onclick="showPage('add-items',this)">Add Items</a></li>
+    <li><a href="#" onclick="showPage('about',this)">About</a></li>
+    <li><a href="#" onclick="showPage('contact',this)">Contact</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openCart()">🛍 Bag <span class="cart-count" id="cartCount">0</span></button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-deco">✏</div>
+    <div class="hero-content">
+      <div class="hero-badge">✦ Your Study Companion ✦</div>
+      <h1>Write Your<br><em>Best Story</em></h1>
+      <p>Premium stationery for students, creators & dreamers.<br>Every pen stroke, every page — crafted with care.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="showPage('shop',document.querySelector('[onclick*=shop]'))">Shop Now →</button>
+        <button class="btn btn-secondary" onclick="showPage('categories',document.querySelector('[onclick*=categories]'))">Browse Categories</button>
+      </div>
+    </div>
+    <div class="hero-scroll">↓</div>
+  </section>
+  <div class="features-strip">
+    <div class="feature-item">📦 Free Delivery over ₹499</div>
+    <div class="feature-item">⭐ Premium Quality</div>
+    <div class="feature-item">🔒 Secure UPI Payment</div>
+    <div class="feature-item">🎁 Gift Wrapping</div>
+  </div>
+  <div class="section-title"><span class="label">✦ Handpicked for You ✦</span><h2>Featured Products</h2></div>
+  <div class="products-section"><div class="products-grid" id="featuredGrid"></div></div>
+  <div class="section-title"><span class="label">✦ Why Choose Us ✦</span><h2>The BB4B Promise</h2></div>
+  <div class="categories-grid" style="padding-bottom:2rem">
+    <div class="category-card" style="cursor:default"><div class="cat-icon">✏️</div><h3>Curated Selection</h3><p>Hand-picked by students for students</p></div>
+    <div class="category-card" style="cursor:default"><div class="cat-icon">💰</div><h3>Best Prices</h3><p>Affordable quality, every time</p></div>
+    <div class="category-card" style="cursor:default"><div class="cat-icon">🔒</div><h3>Safe UPI Pay</h3><p>Pay instantly with any UPI app</p></div>
+    <div class="category-card" style="cursor:default"><div class="cat-icon">❤️</div><h3>Made with Love</h3><p>Passionate about helping you learn</p></div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="page" id="page-shop">
+  <div class="section-title"><span class="label">✦ All Products ✦</span><h2>Our Collection</h2></div>
+  <div class="products-section"><div class="products-grid" id="shopGrid"></div></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="page" id="page-categories">
+  <div class="section-title"><span class="label">✦ Browse By Type ✦</span><h2>Categories</h2></div>
+  <div class="categories-grid">
+    <div class="category-card" onclick="filterCategory('Writing')"><div class="cat-icon">✏️</div><h3>Writing</h3><p>Pens, pencils, markers</p></div>
+    <div class="category-card" onclick="filterCategory('Notebooks')"><div class="cat-icon">📒</div><h3>Notebooks</h3><p>Journals, diaries & notepads</p></div>
+    <div class="category-card" onclick="filterCategory('Art')"><div class="cat-icon">🎨</div><h3>Art & Craft</h3><p>Colors, brushes & tools</p></div>
+    <div class="category-card" onclick="filterCategory('Organization')"><div class="cat-icon">📁</div><h3>Organization</h3><p>Files, folders & planners</p></div>
+    <div class="category-card" onclick="filterCategory('Geometry')"><div class="cat-icon">📐</div><h3>Geometry</h3><p>Rulers, compass & sets</p></div>
+    <div class="category-card" onclick="filterCategory('Adhesives')"><div class="cat-icon">📌</div><h3>Adhesives</h3><p>Glue, tape & pins</p></div>
+    <div class="category-card" onclick="filterCategory('Bags')"><div class="cat-icon">🎒</div><h3>Bags & Cases</h3><p>Pencil cases & bags</p></div>
+    <div class="category-card" onclick="filterCategory('All')"><div class="cat-icon">🛍️</div><h3>View All</h3><p>See everything in our store</p></div>
+  </div>
+  <div style="padding:0 2rem 3rem;max-width:1100px;margin:0 auto"><div id="filteredGrid" class="products-grid" style="margin-top:0"></div></div>
+</div>
+
+<!-- ADD ITEMS -->
+<div class="page" id="page-add-items">
+  <div class="section-title"><span class="label">✦ Inventory Management ✦</span><h2>Add New Item</h2></div>
+  <div class="products-section">
+    <div class="admin-section">
+      <div class="form-grid">
+        <div class="form-group"><label>Product Name *</label><input type="text" id="newName" placeholder="e.g. Classic Ballpoint Pen"></div>
+        <div class="form-group"><label>Price (₹) *</label><input type="number" id="newPrice" placeholder="e.g. 25"></div>
+        <div class="form-group"><label>Category *</label>
+          <select id="newCat">
+            <option value="Writing">Writing</option><option value="Notebooks">Notebooks</option>
+            <option value="Art">Art & Craft</option><option value="Organization">Organization</option>
+            <option value="Geometry">Geometry</option><option value="Adhesives">Adhesives</option>
+            <option value="Bags">Bags & Cases</option><option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tag (optional)</label><input type="text" id="newTag" placeholder="e.g. New, Sale, Hot"></div>
+        <div class="form-group full"><label>Description *</label><textarea id="newDesc" placeholder="Describe the product — material, use, features…"></textarea></div>
+        <div class="form-group full"><label>Choose Icon / Emoji</label><div class="emoji-picker" id="emojiPicker">✏️ 🖊️ 🖋️ 🖍️ 📝 📒 📓 📔 📕 📗 📘 📙 📚 📐 📏 📌 📎 🗂️ 🎨 🖌️ ✂️ 🗒️ 🗓️ 📋 🎒 👜 🖇️ 🔖 💡 🌈</div></div>
+      </div>
+      <button class="btn-add" onclick="addProduct()">＋ Add Item to Store</button>
+      <div class="success-msg" id="addSuccess">✓ Item added successfully to the store!</div>
+    </div>
+    <div class="section-title" style="padding-top:2rem"><span class="label">✦ Current Inventory ✦</span><h2>Your Items</h2></div>
+    <div class="products-grid" id="adminGrid"></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="section-title"><span class="label">✦ Our Story ✦</span><h2>About BB4B Stationery</h2></div>
+  <div class="about-wrapper">
+    <div class="about-card"><h3>📖 Who We Are</h3><p>BB4B Stationery was born from a simple belief — that the right tools inspire great thinking. Founded by students, for students, we curate the finest stationery to help you study smarter, write better, and create freely. Our name stands for <em>"Best Books 4 Brains."</em></p></div>
+    <div class="about-card"><h3>🎯 Our Mission</h3><p>We make premium, thoughtfully designed stationery accessible to every student and creative mind. Whether you're preparing for exams, journaling your thoughts, or building your next art project — we have the perfect tool waiting for you.</p></div>
+    <div class="about-card"><h3>🌟 Our Values</h3>
+      <div class="values-grid">
+        <div class="value-item"><div class="icon">🏆</div><h4>Quality</h4><p>Every product tested for durability</p></div>
+        <div class="value-item"><div class="icon">💚</div><h4>Sustainability</h4><p>Eco-friendly & responsibly sourced</p></div>
+        <div class="value-item"><div class="icon">🤝</div><h4>Community</h4><p>Supporting students across India</p></div>
+        <div class="value-item"><div class="icon">✨</div><h4>Inspiration</h4><p>Design that makes you want to write</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="section-title"><span class="label">✦ Get In Touch ✦</span><h2>Contact Us</h2></div>
+  <div class="contact-wrapper">
+    <div class="contact-info-card">
+      <h3>Let's Talk!</h3>
+      <p>Product queries, bulk orders, feedback — we're always here for you.</p>
+      <div class="contact-detail"><div class="c-icon">📞</div><div class="c-text"><label>Phone / WhatsApp</label><span>+91 79826 69313</span></div></div>
+      <div class="contact-detail"><div class="c-icon">📧</div><div class="c-text"><label>Email Address</label><span>bb4bstationery@gmail.com</span></div></div>
+      <div class="contact-detail"><div class="c-icon">💳</div><div class="c-text"><label>UPI Payment ID</label><span>7982669313@ptaxis</span></div></div>
+      <div class="contact-detail"><div class="c-icon">🕐</div><div class="c-text"><label>Business Hours</label><span>Mon – Sat: 9 AM – 7 PM</span></div></div>
+      <div class="contact-detail"><div class="c-icon">📍</div><div class="c-text"><label>Location</label><span>New Delhi, India</span></div></div>
+    </div>
+    <div class="contact-form-card">
+      <h3>Send a Message</h3>
+      <div class="form-group" style="margin-bottom:1rem"><label>Your Name</label><input type="text" id="cName" placeholder="Full Name"></div>
+      <div class="form-group" style="margin-bottom:1rem"><label>Email</label><input type="email" id="cEmail" placeholder="your@email.com"></div>
+      <div class="form-group" style="margin-bottom:1rem"><label>Subject</label><input type="text" id="cSubject" placeholder="e.g. Bulk Order Enquiry"></div>
+      <div class="form-group" style="margin-bottom:1rem"><label>Message</label><textarea id="cMessage" style="min-height:110px" placeholder="Type your message here…"></textarea></div>
+      <button class="btn-send" onclick="sendMessage()">✉ Send Message</button>
+      <div class="success-msg" id="contactSuccess">✓ Message sent! We'll reply within 24 hours.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS -->
+<div class="page" id="page-order-success">
+  <div class="order-success">
+    <div class="big-icon">🎉</div>
+    <h2>Order Placed!</h2>
+    <p>Thank you for shopping with BB4B Stationery! We'll verify your UPI transaction and confirm your order within <strong>2–4 hours</strong> via WhatsApp or Email.</p>
+    <div class="order-card">
+      <h4>📦 Your Order</h4>
+      <div id="successOrderItems"></div>
+      <div style="border-top:2px solid var(--blue-ink);margin-top:.8rem;padding-top:.8rem;display:flex;justify-content:space-between;font-family:'Special Elite',cursive;color:var(--accent);font-size:1rem">
+        <span>Total Paid</span><span id="successTotal"></span>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:#aaa">Transaction ID: <strong id="successTxn" style="color:var(--blue-ink)"></strong></p>
+    <p style="font-size:.85rem;color:#aaa;margin-top:.4rem">Questions? Call/WhatsApp <strong>+91 79826 69313</strong></p>
+    <button class="checkout-btn" style="max-width:250px;margin:2rem auto 0;display:block" onclick="backToHome()">← Continue Shopping</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">BB4<span>B</span> Stationery</div>
+      <p class="footer-desc">Your trusted stationery companion for every student, writer, and creative soul.</p>
+      <p style="font-size:.82rem;margin-top:.8rem;color:#aaa">💳 We accept all UPI payments<br>📱 GPay · PhonePe · Paytm · BHIM · Any UPI</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#" onclick="showPage('home',null)">Home</a></li>
+        <li><a href="#" onclick="showPage('shop',null)">Shop All</a></li>
+        <li><a href="#" onclick="showPage('categories',null)">Categories</a></li>
+        <li><a href="#" onclick="showPage('about',null)">About Us</a></li>
+        <li><a href="#" onclick="showPage('contact',null)">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+917982669313">📞 +91 79826 69313</a></li>
+        <li><a href="mailto:bb4bstationery@gmail.com">📧 bb4bstationery@gmail.com</a></li>
+        <li><a href="#">💳 7982669313@ptaxis</a></li>
+        <li><a href="#">📍 New Delhi, India</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 BB4B Stationery. Made with ✏️ and ❤️ for every student.</div>
+</footer>
+
+<script>
+const UPI_ID = '7982669313@ptaxis';
+const STORE_NAME = 'BB4B Stationery';
+
+let products = [
+  {id:1,name:"Classic Ballpoint Pen (Pack of 10)",price:49,desc:"Smooth-flow blue ink, comfortable grip, perfect for everyday writing.",cat:"Writing",emoji:"🖊️",tag:"Best Seller"},
+  {id:2,name:"A5 Ruled Notebook",price:89,desc:"200 pages, premium paper, sewn binding that lies flat.",cat:"Notebooks",emoji:"📒",tag:"Popular"},
+  {id:3,name:"Geometry Box Set",price:129,desc:"Complete set with compass, divider, ruler, protractor & set squares.",cat:"Geometry",emoji:"📐",tag:""},
+  {id:4,name:"Watercolor Set 24 Shades",price:199,desc:"Vibrant, blendable colors for students & hobby artists.",cat:"Art",emoji:"🎨",tag:"New"},
+  {id:5,name:"Highlight Markers (6 Pcs)",price:75,desc:"Fluorescent colors, chisel tip, smear-free on ink.",cat:"Writing",emoji:"🖍️",tag:""},
+  {id:6,name:"Hardbound Journal",price:249,desc:"Thick ivory pages, ribbon bookmark, perfect for journaling.",cat:"Notebooks",emoji:"📔",tag:"Premium"},
+  {id:7,name:"Pencil Case – Canvas",price:159,desc:"Zippered, fits 20+ pens, sturdy canvas material.",cat:"Bags",emoji:"👜",tag:""},
+  {id:8,name:"Sticky Notes Bundle (5 Pads)",price:65,desc:"Assorted colors, strong adhesive, 100 sheets each.",cat:"Organization",emoji:"📌",tag:"Sale"},
+];
+let cart = [], nextId = 9, selectedEmoji = '✏️';
+
+window.addEventListener('DOMContentLoaded', () => {
+  const picker = document.getElementById('emojiPicker');
+  const emojis = picker.textContent.trim().split(/\s+/);
+  picker.innerHTML = '';
+  emojis.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-btn'; btn.textContent = e;
+    btn.onclick = () => { document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); selectedEmoji = e; };
+    picker.appendChild(btn);
+  });
+  if(picker.children[0]) picker.children[0].classList.add('selected');
+  renderAll();
+});
+
+function renderAll() {
+  renderGrid('featuredGrid', products.slice(0,4));
+  renderGrid('shopGrid', products);
+  renderGrid('adminGrid', products, true);
+}
+
+function renderGrid(id, items, showDelete=false) {
+  const c = document.getElementById(id);
+  if(!c) return;
+  if(!items.length){ c.innerHTML='<p style="color:#999;font-style:italic;grid-column:1/-1;text-align:center;padding:2rem">No items found.</p>'; return; }
+  c.innerHTML = items.map(p=>`
+    <div class="product-card">
+      ${p.tag?`<div class="tag">${p.tag}</div>`:''}
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-info">
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="product-footer">
+          <span class="price">₹${p.price}</span>
+          <div style="display:flex;gap:.4rem;align-items:center">
+            ${showDelete?`<button onclick="deleteProduct(${p.id})" style="background:#fee;border:1px solid #fcc;color:#c00;border-radius:3px;padding:.3rem .6rem;cursor:pointer;font-size:.8rem">✕</button>`:''}
+            <button class="add-to-cart" onclick="addToCart(${p.id})">+ Add</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function addToCart(id) {
+  const p = products.find(x=>x.id===id); if(!p) return;
+  const ex = cart.find(x=>x.id===id);
+  if(ex) ex.qty++; else cart.push({...p, qty:1});
+  updateCartUI(); showToast('✓ '+p.emoji+' Added to bag!');
+}
+
+function changeQty(id, d) {
+  const item = cart.find(x=>x.id===id); if(!item) return;
+  item.qty += d;
+  if(item.qty<=0) cart = cart.filter(x=>x.id!==id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const count = cart.reduce((a,x)=>a+x.qty,0);
+  const cc = document.getElementById('cartCount');
+  cc.textContent = count; cc.style.display = count>0?'flex':'none';
+  const itemsDiv = document.getElementById('cartItems');
+  const totalDiv = document.getElementById('cartTotal');
+  const checkBtn = document.getElementById('checkoutBtn');
+  if(!cart.length){
+    itemsDiv.innerHTML='<div class="empty-cart">Your bag is empty.<br>Add some stationery!</div>';
+    totalDiv.style.display='none'; checkBtn.style.display='none';
+  } else {
+    itemsDiv.innerHTML = cart.map(i=>`
+      <div class="cart-item">
+        <div>
+          <div class="cart-item-name">${i.emoji} ${i.name}</div>
+          <div style="display:flex;align-items:center;gap:.4rem;margin-top:.3rem">
+            <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
+            <span style="font-size:.9rem;min-width:20px;text-align:center">${i.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+          </div>
+        </div>
+        <span class="cart-item-price">₹${i.price*i.qty}</span>
+      </div>`).join('');
+    const total = cart.reduce((a,x)=>a+x.price*x.qty,0);
+    document.getElementById('totalAmount').textContent='₹'+total;
+    totalDiv.style.display='flex'; checkBtn.style.display='block';
+  }
+}
+
+function openCart(){ document.getElementById('cartOverlay').style.display='block'; }
+function closeCart(){ document.getElementById('cartOverlay').style.display='none'; }
+
+function openPayment() {
+  if(!cart.length) return;
+  closeCart();
+  const total = cart.reduce((a,x)=>a+x.price*x.qty,0);
+  document.getElementById('summaryItems').innerHTML = cart.map(i=>`<div class="order-row"><span>${i.emoji} ${i.name} × ${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('');
+  document.getElementById('summaryTotal').textContent='₹'+total;
+  document.getElementById('payHeaderAmount').textContent='₹'+total;
+  document.getElementById('qrAmount').textContent='₹'+total;
+  document.getElementById('instrAmount').textContent='₹'+total;
+
+  const note = encodeURIComponent('BB4B Order');
+  const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${total}&cu=INR&tn=${note}`;
+  document.getElementById('phonepeLink').href=`phonepe://pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${total}&cu=INR`;
+  document.getElementById('gpayLink').href=`tez://upi/pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${total}&cu=INR`;
+  document.getElementById('paytmLink').href=upiUrl;
+  document.getElementById('bhimLink').href=`bhim://pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${total}&cu=INR`;
+
+  document.getElementById('qrcode').innerHTML='';
+  new QRCode(document.getElementById('qrcode'),{text:upiUrl,width:185,height:185,colorDark:'#1a3a5c',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+
+  goStepDirect(1);
+  document.getElementById('paymentOverlay').style.display='flex';
+}
+
+function closePayment(){ document.getElementById('paymentOverlay').style.display='none'; }
+
+function goStepDirect(n) {
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).classList.toggle('active',i===n);
+    const ind=document.getElementById('sind'+i);
+    ind.classList.remove('active','done');
+    if(i<n) ind.classList.add('done');
+    else if(i===n) ind.classList.add('active');
+    if(i<3){
+      const line=document.getElementById('sline'+i);
+      if(line) line.classList.toggle('done',i<n);
+    }
+  });
+}
+
+function goStep2() {
+  const name=document.getElementById('payName').value.trim();
+  const phone=document.getElementById('payPhone').value.trim();
+  const addr=document.getElementById('payAddress').value.trim();
+  if(!name||!phone||!addr){alert('Please fill in Name, Phone and Delivery Address.');return;}
+  if(!/^\d{10}$/.test(phone)){alert('Please enter a valid 10-digit phone number.');return;}
+  goStepDirect(2);
+}
+
+function confirmOrder() {
+  const txn=document.getElementById('txnId').value.trim();
+  if(!txn){alert('Please enter the Transaction ID / UTR Number from your UPI app.');return;}
+  const total=cart.reduce((a,x)=>a+x.price*x.qty,0);
+  document.getElementById('successOrderItems').innerHTML=cart.map(i=>`<div style="display:flex;justify-content:space-between;padding:.3rem 0;font-size:.87rem;border-bottom:1px dashed var(--aged)"><span>${i.emoji} ${i.name} × ${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('');
+  document.getElementById('successTotal').textContent='₹'+total;
+  document.getElementById('successTxn').textContent=txn;
+  closePayment();
+  cart=[]; updateCartUI();
+  ['payName','payPhone','payEmail','payAddress','txnId'].forEach(id=>document.getElementById(id).value='');
+  showPage('order-success',null);
+  showToast('🎉 Order Placed Successfully!');
+}
+
+function backToHome(){ showPage('home',document.querySelector('[onclick*="home"]')); }
+
+function addProduct() {
+  const name=document.getElementById('newName').value.trim();
+  const price=parseInt(document.getElementById('newPrice').value);
+  const desc=document.getElementById('newDesc').value.trim();
+  const cat=document.getElementById('newCat').value;
+  const tag=document.getElementById('newTag').value.trim();
+  if(!name||!price||!desc){alert('Please fill in Name, Price and Description.');return;}
+  products.push({id:nextId++,name,price,desc,cat,emoji:selectedEmoji,tag});
+  renderAll();
+  ['newName','newPrice','newDesc','newTag'].forEach(id=>document.getElementById(id).value='');
+  const msg=document.getElementById('addSuccess');
+  msg.style.display='block'; setTimeout(()=>msg.style.display='none',3000);
+}
+
+function deleteProduct(id) {
+  if(!confirm('Remove this item?')) return;
+  products=products.filter(p=>p.id!==id); renderAll();
+}
+
+function filterCategory(cat) {
+  showPage('categories',null);
+  renderGrid('filteredGrid', cat==='All'?products:products.filter(p=>p.cat===cat));
+  setTimeout(()=>document.getElementById('filteredGrid').scrollIntoView({behavior:'smooth'}),100);
+}
+
+function sendMessage() {
+  const name=document.getElementById('cName').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  const msg=document.getElementById('cMessage').value.trim();
+  if(!name||!email||!msg){alert('Please fill in all required fields.');return;}
+  const s=document.getElementById('contactSuccess'); s.style.display='block';
+  ['cName','cEmail','cSubject','cMessage'].forEach(id=>document.getElementById(id).value='');
+  setTimeout(()=>s.style.display='none',4000);
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function showPage(name,linkEl) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  if(linkEl) linkEl.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
